@@ -1,0 +1,4 @@
+pandas==1.4.3
+streamlit==1.12.2
+mne==1.1.1
+streamlit_aggrid==0.3.2
