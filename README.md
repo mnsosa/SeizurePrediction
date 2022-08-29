@@ -30,12 +30,13 @@ In the `src` folder, we have the source code of the project. In the `experiments
 
 
 
-## Install
+## Install [using conda]
 
-1. Create virtual enviroment.
-2. `pip install -r requirements.txt`
-3. Download the data from https://physionet.org/content/chbmit/1.0.0/. Using the terminal: `wget -r -np -nH --cut-dirs=3 -R index.html* https://physionet.org/files/chbmit/1.0.0/`
-4. Edit the `config.py` file to set the paths to the data. What you need to edit it is the `CHB_FOLDER_DIR` key from the config dict.
+1. `conda create -n seizure-prediction python=3.10.4`
+2. `conda activate seizure-prediction`
+3. `pip install -r requirements.txt`
+4. Download the data from https://physionet.org/content/chbmit/1.0.0/. Using the terminal: `wget -r -np -nH --cut-dirs=3 -R index.html* https://physionet.org/files/chbmit/1.0.0/`. **If you already downloaded the data, you can skip this step.**
+5. Edit the `config.py` file to set the paths to the data. What you need to edit it is the `CHB_FOLDER_DIR` key from the config dict.
 
 
 
