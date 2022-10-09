@@ -17,13 +17,14 @@ The organization of the repository is as follows:
 │   │   │   └───...
 │   │   └───📁 notebooks/
 │   │       └───...
-│   └───📁 preprocessing/
-│       └───...
+│   ├───📁 preprocessing/
+│   │   └───...
+│   ├───📄 visualizer.py
+│   ├───📄 config.py
+│   └───📄 setup.py
 ├───📄 Makefile
 ├───📄 README.md
-├───📄 config.py
-├───📄 requirements.txt
-└───📄 visualizer.py
+└───📄 requirements.txt
 </pre>
 
 In the `src` folder, we have the source code of the project. In the `experiments` folder, we have the different models that we have tried, and in the `notebooks` folder, we have the notebooks that we have used to develop the project. In the `preprocess` folder, we have the code that we have used to preprocess the data. The `Makefile` is used to automate the execution of the different scripts. The `config.py` file contains the configuration of the project, such as the paths to the data, the paths to the models, etc. The `requirements.txt` file contains the dependencies of the project. Finally, the `visualizer.py` file contains the code to visualize the results of the experiments.
