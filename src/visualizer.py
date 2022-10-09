@@ -56,8 +56,8 @@ def get_edf_data(patient: str, edf: str) -> mne.io.edf.edf.RawEDF:
     return load_edf(edf_path)
 
 
-def select_view() -> None:
-    option = st.sidebar.selectbox(
+def select_view() -> str:
+    option: str = st.sidebar.selectbox(
         'Select a view',
         ['Table', 'Graph', 'Spectrogram'])
     return option
@@ -68,7 +68,7 @@ def plot_spectrogram(edf: str) -> None:
 
 
 def main_view(edf_data: mne.io.edf.edf.RawEDF) -> None:
-    view = select_view()
+    view: str = select_view()
     if view == 'Graph':
         pass
     elif view == 'Spectrogram':
