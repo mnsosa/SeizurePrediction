@@ -1,73 +1,43 @@
 # visualizer using streamlit
+from sz_utils import data_handler
 from config import config
-
 import streamlit as st
 import pandas as pd
 import mne
 import os
 
 
-def load_edf(edf_file: str) -> mne.io.edf.edf.RawEDF:
-    """Load edf file and return a dataframe"""
-    file = edf_file
-    return mne.io.read_raw_edf(file)
-    
-
-def get_patients_folder() -> list[str]:
-    """
-    Get all the patients folder. 
-    IT USES THE CONFIG.PY FILE.
-    """
-    path = config['CHB_FOLDER_DIR']
-    # list the patient in the folder
-    # only list if the element it's an other folder
-    patients = [f for f in os.listdir(path) if os.path.isdir(os.path.join(path, f))]
-    return patients
-    
-
-def get_patient_edf(patient: str) -> list[str]:
-    """
-    Get all the edf files in a patient folder
-    """
-    base_path = config['CHB_FOLDER_DIR']
-    patient_path = os.path.join(base_path, patient)
-    edf_files = [f for f in os.listdir(patient_path) if f.endswith('.edf')]
-    return edf_files
-
-
 def select_patient() -> str:
+    """From the sidebar select a patient"""
     option = st.sidebar.selectbox(
         'Select a patient',
-        get_patients_folder())
+        data_handler.get_patients())
     return option
 
 
 def select_edf(patient) -> str:
+    """From the sidebar select a edf file"""
     option = st.sidebar.selectbox(
         'Select an edf file',
-        get_patient_edf(patient))
+        data_handler.get_patient_edf(patient))
     return option
 
 
-def get_edf_data(patient: str, edf: str) -> mne.io.edf.edf.RawEDF:
-    base_path = config['CHB_FOLDER_DIR']
-    patient_path = os.path.join(base_path, patient)
-    edf_path = os.path.join(patient_path, edf)
-    return load_edf(edf_path)
-
-
 def select_view() -> str:
+    """From the sidebar select a view"""
     option: str = st.sidebar.selectbox(
         'Select a view',
         ['Table', 'Graph', 'Spectrogram'])
     return option
 
 
+# TODO
 def plot_spectrogram(edf: str) -> None:
     pass
 
 
 def main_view(edf_data: mne.io.edf.edf.RawEDF) -> None:
+    """Main view of the app"""
     view: str = select_view()
     if view == 'Graph':
         pass
@@ -75,9 +45,11 @@ def main_view(edf_data: mne.io.edf.edf.RawEDF) -> None:
         plot_spectrogram(edf_data)
     else:
         st.dataframe(edf_data.to_data_frame())
+    return None
 
 
-def main() -> None:
+def app() -> None:
+    """Main function of the app"""
     st.set_page_config(page_title='Seizure Prediction', page_icon=':brain:')
     st.title("EEG Data Visualizer")
 
@@ -85,7 +57,7 @@ def main() -> None:
 
     patient: str = select_patient()
     edf: str = select_edf(patient)
-    edf_data: mne.io.edf.edf.RawEDF = get_edf_data(patient, edf)
+    edf_data: mne.io.edf.edf.RawEDF = data_handler.get_edf_data(patient, edf)
 
     main_view(edf_data) 
 
@@ -93,6 +65,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    app()
     
     

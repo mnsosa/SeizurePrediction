@@ -1,7 +1,7 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
-    name='preprocess',
+    name='sz_utils',
     version='0.1',
-    packages=['preprocess']
+    packages=find_packages(),
 )
