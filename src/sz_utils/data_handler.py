@@ -1,18 +1,21 @@
-####################################################################################################
-# The summary has the metadata of the dataset.
-# The summary is a txt file.
-####################################################################################################
-from config import config
-import mne
+"""This module is about the data extraction from the summary file and
+the edf file.
+
+The summary has the metadata of the dataset.
+The summary is a txt file.
+"""
+
 import os
+import mne
+from config import config
 
 
 def get_patients() -> list[str]:
     """
-    Get all the patients folder. 
+    Get all the patients folder.
     IT USES THE CONFIG.PY FILE.
     """
-    path = config['CHB_FOLDER_DIR']
+    path = config["CHB_FOLDER_DIR"]
     # list the patient in the folder
     # only list if the element it's an other folder
     patients = [f for f in os.listdir(path) if os.path.isdir(os.path.join(path, f))]
@@ -21,27 +24,27 @@ def get_patients() -> list[str]:
 
 def get_patient_edf(patient: str) -> list[str]:
     """Get all the edf files in a patient folder"""
-    base_path = config['CHB_FOLDER_DIR']
+    base_path = config["CHB_FOLDER_DIR"]
     patient_path = os.path.join(base_path, patient)
-    edf_files = [f for f in os.listdir(patient_path) if f.endswith('.edf')]
+    edf_files = [f for f in os.listdir(patient_path) if f.endswith(".edf")]
     return edf_files
 
 
-def get_summary(patient: str) -> list[str]:
+def get_summary(patient: str) -> str:
     """Get the summary of the patient"""
-    base_path = config['CHB_FOLDER_DIR']
+    base_path = config["CHB_FOLDER_DIR"]
     patient_path = os.path.join(base_path, patient)
-    summary_path = os.path.join(patient_path, f'{patient}-summary.txt')
-    with open(summary_path, 'r') as f:
-        summary = f.read()
+    summary_path = os.path.join(patient_path, f"{patient}-summary.txt")
+    with open(summary_path, "r", encoding="utf-8") as file:
+        summary: str = file.read()
     return summary
 
 
 def get_edf_data(patient: str, edf: str) -> mne.io.edf.edf.RawEDF:
     """Read raw edf data and corrects the metadata using the summary file"""
-    base_path = config['CHB_FOLDER_DIR']
+    base_path = config["CHB_FOLDER_DIR"]
     patient_path = os.path.join(base_path, patient)
     edf_path = os.path.join(patient_path, edf)
     mne_data = mne.io.read_raw_edf(edf_path)
-    summary = get_summary(patient)
+    # summary = get_summary(patient)
     return mne_data
