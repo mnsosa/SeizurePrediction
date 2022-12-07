@@ -3,6 +3,8 @@ the edf file.
 
 The summary has the metadata of the dataset.
 The summary is a txt file.
+
+The most important function here is get_seizure_data.
 """
 
 import os
@@ -48,3 +50,65 @@ def get_edf_data(patient: str, edf: str) -> mne.io.edf.edf.RawEDF:
     mne_data = mne.io.read_raw_edf(edf_path)
     # summary = get_summary(patient)
     return mne_data
+
+
+def get_seizure_times(patient: str) -> list[tuple[int, int]]:
+    """Get the seizure times from the summary file.
+    The seizure times are in seconds.
+
+    Args:
+        patient (str): the patient code (ex: chb01)
+
+    Returns:
+        list[tuple[int, int]]: list of tuples with the seizure start time and the seizure end time
+    """
+    summary = get_summary(patient)
+    seizure_start_times = [
+        line for line in summary.splitlines() if "Seizure Start Time" in line
+    ]
+    # split where the ":" is and get the last element
+    # strip it and get the first element (the time) and convert it to int
+    seizure_start_times = [
+        int(line.split(":")[-1].strip().split(" ")[0]) for line in seizure_start_times
+    ]
+
+    seizure_end_times = [
+        line for line in summary.splitlines() if "Seizure End Time" in line
+    ]
+
+    # split where the ":" is and get the last element
+    # strip it and get the first element (the time) and convert it to int
+    seizure_end_times = [
+        int(line.split(":")[-1].strip().split(" ")[0]) for line in seizure_end_times
+    ]
+
+    seizure_times = list(zip(seizure_start_times, seizure_end_times))
+    return seizure_times
+
+
+# make a function from the above
+def get_seizure_data(patient: str) -> pd.DataFrame:
+    """Get the seizure data for a patient
+
+    Args:
+        patient (str): The patient name
+
+    Returns:
+        pd.DataFrame: A dataframe with the file names, number of seizures, start and end times
+    """
+    file_names_and_seizures = get_number_of_seizures(patient)
+    seizure_times = get_seizure_times(patient)
+    df = pd.DataFrame(
+        {
+            "file_name": list(file_names_and_seizures.keys()),
+            "number_of_seizures": list(file_names_and_seizures.values()),
+        }
+    )
+    df["start_times"] = None
+    df["end_times"] = None
+    index_list = df[df["number_of_seizures"] > 0].index.tolist()
+    for index in index_list:
+        index_position = index_list.index(index)
+        df.loc[index, "start_times"] = seizure_times[index_position][0]
+        df.loc[index, "end_times"] = seizure_times[index_position][1]
+    return df
