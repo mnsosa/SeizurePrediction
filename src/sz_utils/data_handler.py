@@ -9,6 +9,7 @@ The most important function here is get_seizure_data.
 
 import os
 import mne
+import pandas as pd
 from config import config
 
 
@@ -84,6 +85,28 @@ def get_seizure_times(patient: str) -> list[tuple[int, int]]:
 
     seizure_times = list(zip(seizure_start_times, seizure_end_times))
     return seizure_times
+
+
+def get_number_of_seizures(patient: str) -> dict[str, int]:
+    """Get the number of seizures for each file
+
+    Args:
+        patient (str): The patient name
+
+    Returns:
+        dict[str, int]: A dictionary with the file name as key and the number of seizures as value
+    """
+    summary = get_summary(patient)
+    number_of_seizures = [
+        line for line in summary.splitlines() if "Number of Seizures" in line
+    ]
+    file_names = [line for line in summary.splitlines() if "File Name" in line]
+    file_names = [line.split(":")[-1].strip() for line in file_names]
+    number_of_seizures = [
+        int(line.split(":")[-1].strip().split(" ")[0]) for line in number_of_seizures
+    ]
+    file_names_and_seizures = dict(zip(file_names, number_of_seizures))
+    return file_names_and_seizures
 
 
 # make a function from the above
