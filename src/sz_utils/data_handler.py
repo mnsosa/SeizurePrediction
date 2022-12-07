@@ -65,7 +65,7 @@ def get_seizure_times(patient: str) -> list[tuple[int, int]]:
     """
     summary = get_summary(patient)
     seizure_start_times = [
-        line for line in summary.splitlines() if "Seizure Start Time" in line
+        line for line in summary.splitlines() if "Start" in line and "seconds" in line
     ]
     # split where the ":" is and get the last element
     # strip it and get the first element (the time) and convert it to int
@@ -74,7 +74,7 @@ def get_seizure_times(patient: str) -> list[tuple[int, int]]:
     ]
 
     seizure_end_times = [
-        line for line in summary.splitlines() if "Seizure End Time" in line
+        line for line in summary.splitlines() if "End" in line and "seconds" in line
     ]
 
     # split where the ":" is and get the last element
@@ -84,7 +84,20 @@ def get_seizure_times(patient: str) -> list[tuple[int, int]]:
     ]
 
     seizure_times = list(zip(seizure_start_times, seizure_end_times))
-    return seizure_times
+    number_of_seizures = get_number_of_seizures(patient)
+    number_of_seizures = list(number_of_seizures.values())
+    indexes_gt_0 = [i for i, x in enumerate(number_of_seizures) if x > 0]
+    number_of_seizures_gt_0 = [number_of_seizures[i] for i in indexes_gt_0]
+    indexes_times = [i for i, _ in enumerate(seizure_times)]
+    groups = []
+    i = 0
+    for i_gt_0 in number_of_seizures_gt_0:
+        groups.append(indexes_times[i : i + i_gt_0])
+        i += i_gt_0
+    seizure_times_group = []
+    for group in groups:
+        seizure_times_group.append([seizure_times[i] for i in group])
+    return seizure_times_group
 
 
 def get_number_of_seizures(patient: str) -> dict[str, int]:
@@ -127,11 +140,17 @@ def get_seizure_data(patient: str) -> pd.DataFrame:
             "number_of_seizures": list(file_names_and_seizures.values()),
         }
     )
-    df["start_times"] = None
-    df["end_times"] = None
+
     index_list = df[df["number_of_seizures"] > 0].index.tolist()
     for index in index_list:
         index_position = index_list.index(index)
-        df.loc[index, "start_times"] = seizure_times[index_position][0]
-        df.loc[index, "end_times"] = seizure_times[index_position][1]
+        start_t = seizure_times[index_position]
+        # convert start_t to a string
+        start_t = str(start_t)
+        df.loc[index, "start_end_times"] = start_t
+        # same for end_t
+        # end_t = seizure_times[index_position][1]
+        # end_t = str(end_t)
+        # df.loc[index, "end_times"] = end_t
+
     return df
