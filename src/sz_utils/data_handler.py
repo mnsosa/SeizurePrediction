@@ -17,6 +17,9 @@ def get_patients() -> list[str]:
     """
     Get all the patients folder.
     IT USES THE CONFIG.PY FILE.
+
+    :return: list of patients
+    :rtype: list[str]
     """
     path = config["CHB_FOLDER_DIR"]
     # list the patient in the folder
@@ -26,7 +29,13 @@ def get_patients() -> list[str]:
 
 
 def get_patient_edf(patient: str) -> list[str]:
-    """Get all the edf files in a patient folder"""
+    """Get all the edf files in a patient folder
+    
+    :param patient: the patient code (ex: chb01)
+    :type patient: str
+    :return: list of edf files
+    :rtype: list[str]
+    """
     base_path = config["CHB_FOLDER_DIR"]
     patient_path = os.path.join(base_path, patient)
     edf_files = [f for f in os.listdir(patient_path) if f.endswith(".edf")]
@@ -34,7 +43,13 @@ def get_patient_edf(patient: str) -> list[str]:
 
 
 def get_summary(patient: str) -> str:
-    """Get the summary of the patient"""
+    """Get the summary of the patient
+    
+    :param patient: the patient code (ex: chb01)
+    :type patient: str
+    :return: the summary of the patient
+    :rtype: str
+    """
     base_path = config["CHB_FOLDER_DIR"]
     patient_path = os.path.join(base_path, patient)
     summary_path = os.path.join(patient_path, f"{patient}-summary.txt")
@@ -43,14 +58,21 @@ def get_summary(patient: str) -> str:
     return summary
 
 
-def get_edf_data(patient: str, edf: str) -> mne.io.edf.edf.RawEDF:
-    """Read raw edf data and corrects the metadata using the summary file"""
+def get_edf_data(patient: str, edf: str) -> pd.DataFrame:
+    """Read raw edf data and corrects the metadata using the summary file
+    
+    :param patient: the patient code (ex: chb01)
+    :type patient: str
+    :param edf: the edf file name
+    :type edf: str
+    :return: the raw edf data¿
+    :rtype: pd.DataFrame
+    """
     base_path = config["CHB_FOLDER_DIR"]
     patient_path = os.path.join(base_path, patient)
     edf_path = os.path.join(patient_path, edf)
     mne_data = mne.io.read_raw_edf(edf_path)
-    # summary = get_summary(patient)
-    return mne_data
+    return mne_data.to_data_frame()
 
 
 def get_seizure_times(patient: str) -> list[tuple[int, int]]:
@@ -103,11 +125,10 @@ def get_seizure_times(patient: str) -> list[tuple[int, int]]:
 def get_number_of_seizures(patient: str) -> dict[str, int]:
     """Get the number of seizures for each file
 
-    Args:
-        patient (str): The patient name
-
-    Returns:
-        dict[str, int]: A dictionary with the file name as key and the number of seizures as value
+    :param patient: The patient name
+    :type patient: str
+    :return: A dictionary with the file name as key and the number of seizures as value
+    :rtype: dict[str, int]
     """
     summary = get_summary(patient)
     number_of_seizures = [
@@ -126,11 +147,10 @@ def get_number_of_seizures(patient: str) -> dict[str, int]:
 def get_seizure_data(patient: str) -> pd.DataFrame:
     """Get the seizure data for a patient
 
-    Args:
-        patient (str): The patient name
-
-    Returns:
-        pd.DataFrame: A dataframe with the file names, number of seizures, start and end times
+    :param patient: The patient name
+    :type patient: str
+    :return: A dataframe with the file names, number of seizures, start and end times
+    :rtype: pd.DataFrame
     """
     file_names_and_seizures = get_number_of_seizures(patient)
     seizure_times = get_seizure_times(patient)
@@ -148,9 +168,4 @@ def get_seizure_data(patient: str) -> pd.DataFrame:
         # convert start_t to a string
         start_t = str(start_t)
         df.loc[index, "start_end_times"] = start_t
-        # same for end_t
-        # end_t = seizure_times[index_position][1]
-        # end_t = str(end_t)
-        # df.loc[index, "end_times"] = end_t
-
     return df
