@@ -12,8 +12,10 @@ The organization of the repository is as follows:
 
 <pre>
 ├───📁 src/
-│   ├───📁 notebooks/
+│   ├───📁 demos/
 │   │   ├───...
+│   ├───📁 notebooks/
+│   │   └───...
 │   ├───📁 sz_utils/
 │   │   └───...
 │   ├───📄 visualizer.py
@@ -24,7 +26,7 @@ The organization of the repository is as follows:
 └───📄 requirements.txt
 </pre>
 
-In the `src` folder, we have the source code of the project. In the `notebooks` folder, we have the different jupyter notebooks that we have used to explore data and to think some processes. `In sz_utils` the are importat python files. In the `preprocess` file, we have the code that we have used to preprocess the data. `data_handler` is the module we made and use to manage the CHB data. The `Makefile` is used to automate the execution of the different scripts. The `config.py` file contains the configuration of the project, such as the paths to the data, the paths to the models, etc. The `requirements.txt` file contains the dependencies of the project. Finally, the `visualizer.py` file contains the code to visualize the results of the experiments.
+In the `src` folder, we have the source code of the project. In the `notebooks` folder, we have the different jupyter notebooks that we have used to explore data and to think some processes. `In sz_utils` the are importat python files. In the `preprocess` file, we have the code that we have used to preprocess the data. `data_handler` is the module we made and use to manage the CHB data. The `Makefile` is used to automate the execution of the different scripts. The `config.py` file contains the configuration of the project, such as the paths to the data, the paths to the models, etc. The `requirements.txt` file contains the dependencies of the project. Finally, the `visualizer.py` file contains the code to visualize the results of the experiments. In the `demos` folder, we have some scripts to show how to use the different modules of the project.
 
 
 
