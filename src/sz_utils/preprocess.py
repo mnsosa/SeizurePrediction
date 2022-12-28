@@ -38,4 +38,21 @@ def get_last_n_windows(
 
     return windows
 
-# %%
+
+def assign_window_values(windows) -> list[int]:
+  """
+  Assigns a label to each window in the list of windows based on the number of samples remaining from the middle of the window to the seizure.
+
+  The label for each window is calculated as follows: window length * (0.5 + window index)
+
+  :param windows: List of windows.
+  :type windows: list[pd.DataFrame]
+  :return: List of labels assigned to each window.
+  :rtype: list[int]
+  """
+  window_values = []
+  for i, window in enumerate(windows):
+    window_value = int(len(window) * (0.5 + i))
+    window_values.append(window_value)
+  return window_values
+
