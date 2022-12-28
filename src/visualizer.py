@@ -7,7 +7,6 @@ patient and a edf file and then you can visualize the data in different ways.
 This module uses the data_handler module to get the data from the files.
 """
 
-import mne
 import pandas as pd
 import streamlit as st
 from sz_utils import data_handler
@@ -57,12 +56,10 @@ def seizures_info(patient: str, edf_file: str) -> pd.DataFrame:
     :return: The seizure data per edf file
     :rtype: pd.DataFrame
     """
-    alL_edfs = data_handler.get_seizure_data(patient)
-    n_of_seizures = alL_edfs[alL_edfs["file_name"] == edf_file]["number_of_seizures"]
-    times = alL_edfs[alL_edfs["file_name"] == edf_file]["start_end_times"]
-    
-
-
+    all_edfs = data_handler.get_seizure_data(patient)
+    n_of_seizures = all_edfs[all_edfs["file_name"] == edf_file]["number_of_seizures"]
+    times = all_edfs[all_edfs["file_name"] == edf_file]["start_end_times"]
+    # TODO
 
 def main_view(edf_data: pd.DataFrame) -> None:
     """Main view of the app
@@ -94,7 +91,7 @@ def app() -> None:
 
     edf_data = data_handler.get_edf_data(patient, edf)
 
-    st.dataframe(seizure_data_per_edf(patient, edf))
+    # st.dataframe(seizure_data_per_edf(patient, edf)) TODO
     main_view(edf_data)
 
     st.write()
