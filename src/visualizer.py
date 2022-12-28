@@ -60,6 +60,8 @@ def seizures_info(patient: str, edf_file: str) -> pd.DataFrame:
     n_of_seizures = all_edfs[all_edfs["file_name"] == edf_file]["number_of_seizures"]
     times = all_edfs[all_edfs["file_name"] == edf_file]["start_end_times"]
     # TODO
+    return pd.DataFrame()
+    
 
 def main_view(edf_data: pd.DataFrame) -> None:
     """Main view of the app
