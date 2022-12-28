@@ -16,6 +16,14 @@ def get_last_n_windows(
     :type n_last: int
     :return: List of windows, each one represented as a DataFrame.
     :rtype: list[pd.DataFrame]
+
+    Example:
+    --------
+    df = pd.DataFrame({"A": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]})
+    get_last_n_windows(df, win_len=3, n_last=2)
+    # Output: [   A
+    #            8  9  10,
+    #            5  6  7]
     """
     windows = []  # List to store the windows
 
@@ -29,3 +37,5 @@ def get_last_n_windows(
         windows.append(df.iloc[start:end])
 
     return windows
+
+# %%
