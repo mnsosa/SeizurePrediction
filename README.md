@@ -1,8 +1,10 @@
+[English](README.md) / [Spanish](README-sp.md) / [Italian](README-it.md)
+
 # Seizure Prediction 🧠
 
 ## Description
 
-This repository contains the development of the final project of the Biomedical Engineering degree, together with my partner Cristian E. Morilla. The idea is to make a comparative study of different modern Deep Learning techniques to predict the pre-ictal period, that is, the period before the convulsive period. This will be done using EEG data.
+This repository contains the development of the final project of the Biomedical Engineering degree, by Matías N. Sosa and Cristian E. Morilla. The idea is to make a comparative study of different modern Deep Learning techniques to predict the pre-ictal period, that is, the period before the convulsive period. This will be done using EEG data.
 
 
 
@@ -21,12 +23,15 @@ The organization of the repository is as follows:
 │   ├───📄 visualizer.py
 │   ├───📄 config.py
 │   └───📄 setup.py
-├───📄 Makefile
+├───📄 .gitignore
+├───📄 README-sp.md
 ├───📄 README.md
-└───📄 requirements.txt
+├───📄 Makefile
+├───📄 requirements.txt
+└───📄 LICENSE.txt
 </pre>
 
-In the `src` folder, we have the source code of the project. In the `notebooks` folder, we have the different jupyter notebooks that we have used to explore data and to think some processes. `In sz_utils` the are importat python files. In the `preprocess` file, we have the code that we have used to preprocess the data. `data_handler` is the module we made and use to manage the CHB data. The `Makefile` is used to automate the execution of the different scripts. The `config.py` file contains the configuration of the project, such as the paths to the data, the paths to the models, etc. The `requirements.txt` file contains the dependencies of the project. Finally, the `visualizer.py` file contains the code to visualize the results of the experiments. In the `demos` folder, we have some scripts to show how to use the different modules of the project.
+In the `src` folder, we have the source code of the project. In the `notebooks` folder, we have the different jupyter notebooks that we have used to explore data and to think some processes. In `sz_utils` the are importat python files. In the `preprocess` file, we have the code that we have used to preprocess the data. `data_handler` is the module we made and use to manage the CHB data. The `Makefile` is used to automate the execution of the different scripts. The `config.py` file contains the configuration of the project, such as the paths to the data, the paths to the models, etc. The `requirements.txt` file contains the dependencies of the project. Finally, the `visualizer.py` file contains the code to visualize the results of the experiments. In the `demos` folder, we have some scripts to show how to use the different modules of the project.
 
 
 
