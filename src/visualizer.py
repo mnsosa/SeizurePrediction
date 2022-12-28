@@ -8,47 +8,78 @@ This module uses the data_handler module to get the data from the files.
 """
 
 import mne
+import pandas as pd
 import streamlit as st
 from sz_utils import data_handler
 
 
 def select_patient() -> str:
-    """From the sidebar select a patient"""
-    option = st.sidebar.selectbox("Select a patient", data_handler.get_patients())
+    """From the sidebar select a patient
+
+    :return: The name of the patient
+    :rtype: str
+    """
+    option = st.selectbox("Select a patient", data_handler.get_patients())
     return option
 
 
 def select_edf(patient) -> str:
-    """From the sidebar select a edf file"""
-    option = st.sidebar.selectbox(
-        "Select an edf file", data_handler.get_patient_edf(patient)
-    )
+    """From the sidebar select a edf file
+
+    :param patient: The name of the patient
+    :type patient: str
+    :return: The name of the edf file
+    :rtype: str
+    """
+    option = st.selectbox("Select an edf file", data_handler.get_patient_edf(patient))
     return option
 
 
 def select_view() -> str:
-    """From the sidebar select a view"""
+    """From the sidebar select a view
+
+    :return: The name of the view
+    :rtype: str
+    """
     option: str = st.sidebar.selectbox(
         "Select a view", ["Table", "Graph", "Spectrogram"]
     )
     return option
 
 
-def plot_spectrogram(edf: mne.io.edf.edf.RawEDF) -> None:
-    """Plot the spectrogram of the edf file in streamlit"""
-    raise NotImplementedError
+def seizures_info(patient: str, edf_file: str) -> pd.DataFrame:
+    """Get the seizure data per edf file
+
+    :param patient: The name of the patient
+    :type patient: str
+    :param edf_file: The name of the edf file
+    :type edf_file: str
+    :return: The seizure data per edf file
+    :rtype: pd.DataFrame
+    """
+    alL_edfs = data_handler.get_seizure_data(patient)
+    n_of_seizures = alL_edfs[alL_edfs["file_name"] == edf_file]["number_of_seizures"]
+    times = alL_edfs[alL_edfs["file_name"] == edf_file]["start_end_times"]
+    
 
 
-def main_view(edf_data: mne.io.edf.edf.RawEDF) -> None:
-    """Main view of the app"""
-    view: str = select_view()
+
+def main_view(edf_data: pd.DataFrame) -> None:
+    """Main view of the app
+
+    :param edf_data: The data of the edf file
+    :type edf_data: pd.DataFrame
+    :return: None
+    :rtype: None
+    """
+    view = select_view()
     if view == "Graph":
         pass
     elif view == "Spectrogram":
-        plot_spectrogram(edf_data)
+        # plot_spectrogram(edf_data)
+        pass
     else:
-        st.dataframe(edf_data.to_data_frame())
-    return None
+        st.dataframe(edf_data)
 
 
 def app() -> None:
@@ -56,12 +87,14 @@ def app() -> None:
     st.set_page_config(page_title="Seizure Prediction", page_icon=":brain:")
     st.title("EEG Data Visualizer")
 
-    st.sidebar.title("Select your EEG data")
+    with st.sidebar:
+        st.title("Select your EEG data")
+        patient = select_patient()
+        edf = select_edf(patient)
 
-    patient: str = select_patient()
-    edf: str = select_edf(patient)
-    edf_data: mne.io.edf.edf.RawEDF = data_handler.get_edf_data(patient, edf)
+    edf_data = data_handler.get_edf_data(patient, edf)
 
+    st.dataframe(seizure_data_per_edf(patient, edf))
     main_view(edf_data)
 
     st.write()
