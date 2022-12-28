@@ -143,7 +143,6 @@ def get_number_of_seizures(patient: str) -> dict[str, int]:
     return file_names_and_seizures
 
 
-# make a function from the above
 def get_seizure_data(patient: str) -> pd.DataFrame:
     """Get the seizure data for a patient
 
