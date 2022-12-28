@@ -1,6 +1,6 @@
 [English](README.md) / [Spanish](README-sp.md) / [Italian](README-it.md)
 
-# Prediccion de Conversiones
+# Prediccion de convulsiones 🧠
 
 Este repositorio contiene el desarrollo del proyecto final del título de Ingeniería Biomédica, realizado por  Matías N. Sosa y Cristian E. Morilla. La idea es realizar un estudio comparativo de diferentes técnicas de Deep Learning modernas para predecir el período preictal, es decir, el período antes del período convulsivo. Esto se realizará utilizando datos de EEG.
 
