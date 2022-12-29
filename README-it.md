@@ -40,7 +40,7 @@ Nella cartella `src` abbiamo il codice sorgente del progetto. Nella cartella `no
 L'esecuzione verrà effettuata utilizzando il `Makefile`.
 
 ```bash
-make OPZIONE
+make OPTION
 ```
 
 Le diverse opzioni disponibili al momento sono:
