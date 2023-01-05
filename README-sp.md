@@ -44,9 +44,10 @@ En la carpeta `src` tenemos el código fuente del proyecto. En la carpeta `noteb
 La ejecución se realizará utilizando el `Makefile`.
 
 ```bash
-make OPCIÓN
-Las diferentes opciones disponibles por ahora son:
+make OPTION
 ```
+Las diferentes opciones disponibles por ahora son:
+
 1. `web_app`: Ejecutar la aplicación web.
 
 <br>
