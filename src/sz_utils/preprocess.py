@@ -9,6 +9,31 @@ import numpy as np
 from scipy import fftpack
 
 
+def get_frequencies_amplitudes(
+    signal: np.ndarray, sampling_freq: float
+) -> tuple[list, list]:
+    """Get the frequencies and amplitudes of the signal.
+
+    :param signal: The signal to decompose.
+    :type signal: np.ndarray
+    :param sampling_freq: The sampling frequency of the signal, in Hz.
+    :type sampling_freq: float
+    :return: A tuple containing two lists with the frequencies and amplitudes of the signal.
+    :rtype: tuple[list, list]
+    """
+
+    # Perform the Fast Fourier Transform on the signal
+    fft = fftpack.fft(signal)
+
+    # Calculate the range of frequencies
+    frequencies = fftpack.fftfreq(len(fft)) * sampling_freq  # type: ignore
+
+    # Get the absolute value of each frequency component
+    amplitudes = np.abs(fft)
+
+    return frequencies, amplitudes
+
+
 def decompose_into_bands(
     signal: np.ndarray, sampling_freq: float
 ) -> tuple[list, list, list, list]:
@@ -23,14 +48,7 @@ def decompose_into_bands(
     :rtype: tuple[list, list, list, list]
     """
 
-    # Perform the Fast Fourier Transform on the signal
-    fft = fftpack.fft(signal)
-
-    # Calculate the range of frequencies
-    frequencies = fftpack.fftfreq(len(fft)) * sampling_freq
-
-    # Get the absolute value of each frequency component
-    amplitudes = np.abs(fft)
+    frequencies, amplitudes = get_frequencies_amplitudes(signal, sampling_freq)
 
     # Initialize lists to store the amplitudes of each frequency band
     alfa_amplitudes = []
