@@ -1,5 +1,55 @@
-"""Functions for preprocessing data. It will be helpful for several models."""
+"""Functions for preprocessing data. 
+
+Data cleaning, feature engineering, etc.
+
+It will be helpful for several models.
+"""
 import pandas as pd
+import numpy as np
+from scipy import fftpack
+
+
+def decompose_into_bands(
+    signal: np.ndarray, sampling_freq: float
+) -> tuple[list, list, list, list]:
+    """
+    Decompose the given signal into four bands of frequency: alpha, beta, delta and gamma.
+
+    :param signal: The signal to decompose.
+    :type signal: np.ndarray
+    :param sampling_freq: The sampling frequency of the signal, in Hz.
+    :type sampling_freq: float
+    :return: A tuple containing four lists with the amplitudes of the frequency bands.
+    :rtype: tuple[list, list, list, list]
+    """
+
+    # Perform the Fast Fourier Transform on the signal
+    fft = fftpack.fft(signal)
+
+    # Calculate the range of frequencies
+    frequencies = fftpack.fftfreq(len(fft)) * sampling_freq
+
+    # Get the absolute value of each frequency component
+    amplitudes = np.abs(fft)
+
+    # Initialize lists to store the amplitudes of each frequency band
+    alfa_amplitudes = []
+    beta_amplitudes = []
+    delta_amplitudes = []
+    gamma_amplitudes = []
+
+    # Iterate over frequencies and amplitudes and store the amplitudes in the corresponding lists
+    for frequency, amplitude in zip(frequencies, amplitudes):
+        if frequency >= 8 and frequency <= 13:
+            alfa_amplitudes.append(amplitude)
+        elif frequency >= 13 and frequency <= 30:
+            beta_amplitudes.append(amplitude)
+        elif frequency >= 0.5 and frequency <= 4:
+            delta_amplitudes.append(amplitude)
+        elif frequency >= 30 and frequency <= 100:
+            gamma_amplitudes.append(amplitude)
+
+    return alfa_amplitudes, beta_amplitudes, delta_amplitudes, gamma_amplitudes
 
 
 def get_last_n_windows(
@@ -40,19 +90,18 @@ def get_last_n_windows(
 
 
 def assign_window_values(windows) -> list[int]:
-  """
-  Assigns a label to each window in the list of windows based on the number of samples remaining from the middle of the window to the seizure.
+    """
+    Assigns a label to each window in the list of windows based on the number of samples remaining from the middle of the window to the seizure.
 
-  The label for each window is calculated as follows: window length * (0.5 + window index)
+    The label for each window is calculated as follows: window length * (0.5 + window index)
 
-  :param windows: List of windows.
-  :type windows: list[pd.DataFrame]
-  :return: List of labels assigned to each window.
-  :rtype: list[int]
-  """
-  window_values = []
-  for i, window in enumerate(windows):
-    window_value = int(len(window) * (0.5 + i))
-    window_values.append(window_value)
-  return window_values
-
+    :param windows: List of windows.
+    :type windows: list[pd.DataFrame]
+    :return: List of labels assigned to each window.
+    :rtype: list[int]
+    """
+    window_values = []
+    for i, window in enumerate(windows):
+        window_value = int(len(window) * (0.5 + i))
+        window_values.append(window_value)
+    return window_values
