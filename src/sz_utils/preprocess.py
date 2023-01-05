@@ -109,7 +109,8 @@ def get_last_n_windows(
 
 def assign_window_values(windows) -> list[int]:
     """
-    Assigns a label to each window in the list of windows based on the number of samples remaining from the middle of the window to the seizure.
+    Assigns a label to each window in the list of windows based on the number of samples remaining
+    from the middle of the window to the seizure.
 
     The label for each window is calculated as follows: window length * (0.5 + window index)
 
