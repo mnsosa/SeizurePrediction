@@ -108,7 +108,7 @@ def get_last_n_windows(
     return windows
 
 
-def assign_window_values(windows) -> List[int]:
+def assign_window_values(windows: List[pd.DataFrame]) -> List[int]:
     """
     Assigns a label to each window in the list of windows based on the number of samples remaining
     from the middle of the window to the seizure.

@@ -31,7 +31,7 @@ def get_patients() -> List[str]:
 
 def get_patient_edf(patient: str) -> List[str]:
     """Get all the edf files in a patient folder
-    
+
     :param patient: the patient code (ex: chb01)
     :type patient: str
     :return: list of edf files
@@ -45,7 +45,7 @@ def get_patient_edf(patient: str) -> List[str]:
 
 def get_summary(patient: str) -> str:
     """Get the summary of the patient
-    
+
     :param patient: the patient code (ex: chb01)
     :type patient: str
     :return: the summary of the patient
@@ -61,7 +61,7 @@ def get_summary(patient: str) -> str:
 
 def get_edf_data(patient: str, edf: str) -> pd.DataFrame:
     """Read raw edf data and corrects the metadata using the summary file
-    
+
     :param patient: the patient code (ex: chb01)
     :type patient: str
     :param edf: the edf file name
