@@ -4,3 +4,4 @@ streamlit==1.12.2
 mne==1.1.1
 scikit-learn==1.1.2
 jupyter==1.0.0
+ydata-profiling
