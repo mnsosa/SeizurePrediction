@@ -11,9 +11,11 @@ import os
 import mne
 import pandas as pd
 from config import config
+from typing import List,Tuple, Dict
 
 
-def get_patients() -> list[str]:
+
+def get_patients() -> List[str]:
     """
     Get all the patients folder.
     IT USES THE CONFIG.PY FILE.
@@ -28,7 +30,7 @@ def get_patients() -> list[str]:
     return patients
 
 
-def get_patient_edf(patient: str) -> list[str]:
+def get_patient_edf(patient: str) -> List[str]:
     """Get all the edf files in a patient folder
     
     :param patient: the patient code (ex: chb01)
@@ -75,7 +77,7 @@ def get_edf_data(patient: str, edf: str) -> pd.DataFrame:
     return mne_data.to_data_frame()
 
 
-def get_seizure_times(patient: str) -> list[tuple[int, int]]:
+def get_seizure_times(patient: str) -> List[Tuple[int, int]]:
     """Get the seizure times from the summary file.
     The seizure times are in seconds.
 
@@ -122,7 +124,7 @@ def get_seizure_times(patient: str) -> list[tuple[int, int]]:
     return seizure_times_group
 
 
-def get_number_of_seizures(patient: str) -> dict[str, int]:
+def get_number_of_seizures(patient: str) -> Dict[str, int]:
     """Get the number of seizures for each file
 
     :param patient: The patient name

@@ -7,11 +7,12 @@ It will be helpful for several models.
 import pandas as pd
 import numpy as np
 from scipy import fftpack
+from typing import List,Tuple, Dict
 
 
 def get_frequencies_amplitudes(
     signal: np.ndarray, sampling_freq: float
-) -> tuple[list, list]:
+) -> Tuple[List, List]:
     """Get the frequencies and amplitudes of the signal.
 
     :param signal: The signal to decompose.
@@ -36,7 +37,7 @@ def get_frequencies_amplitudes(
 
 def decompose_into_bands(
     signal: np.ndarray, sampling_freq: float
-) -> tuple[list, list, list, list]:
+) -> Tuple[List, List, List, List]:
     """
     Decompose the given signal into four bands of frequency: alpha, beta, delta and gamma.
 
@@ -72,7 +73,7 @@ def decompose_into_bands(
 
 def get_last_n_windows(
     df: pd.DataFrame, win_len: int, n_last: int
-) -> list[pd.DataFrame]:
+) -> List[pd.DataFrame]:
     """
     Return the last N windows of size win_len from the input DataFrame.
 
@@ -107,7 +108,7 @@ def get_last_n_windows(
     return windows
 
 
-def assign_window_values(windows) -> list[int]:
+def assign_window_values(windows) -> List[int]:
     """
     Assigns a label to each window in the list of windows based on the number of samples remaining
     from the middle of the window to the seizure.
