@@ -187,7 +187,7 @@ def make_patient_windows(patient: str) -> Tuple[np.ndarray, np.ndarray]:
             'FZ-CZ', 'CZ-PZ', 'P7-T7', 'T7-FT9', 'FT9-FT10', 'FT10-T8']
 
     # 1. Get edf files for patient
-    edf_files = get_patient_edf(patient)
+    # edf_files = get_patient_edf(patient)
     # 2. Get info about seizures
     seizures = get_seizure_data(patient)
     # 3. Split into the one with and without seizures
