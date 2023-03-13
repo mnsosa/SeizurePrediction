@@ -9,9 +9,11 @@ The most important function here is get_seizure_data.
 
 import os
 import mne
+import numpy as np
 import pandas as pd
 from config import config
 from typing import List, Tuple, Dict
+from ast import literal_eval
 
 
 def get_patients() -> List[str]:
@@ -169,3 +171,80 @@ def get_seizure_data(patient: str) -> pd.DataFrame:
         start_t = str(start_t)
         df.loc[index, "start_end_times"] = start_t
     return df
+
+
+def get_patient_windows(patient: str) -> Tuple[np.ndarray, np.ndarray]:
+    """Get preictal and not preictal samples.
+
+    :param patient: patient id name (eg. chb01)
+    :type patient: str
+    :return: preictal and not preictal samples
+    :rtype: Tuple[np.ndarray, np.ndarray]
+    """
+    # 1. Get edf files for patient
+    edf_files = get_patient_edf(patient)
+    # 2. Get info about seizures
+    seizures = get_seizure_data(patient)
+    # 3. Split into the one with and without seizures
+    seizures_with = seizures[seizures["number_of_seizures"] > 0]
+    seizures_without = seizures[seizures["number_of_seizures"] == 0]
+    # 4. For each file with seizures, get the seizure times
+    seizure_times = []
+    for edf_file in seizures_with["file_name"]:
+        seizure_times.append(
+            literal_eval(
+                seizures_with[seizures_with["file_name"] == edf_file][
+                    "start_end_times"
+                ].values[0]
+            )
+        )
+    # 5. Get the edf_files_names with seizures
+    edf_files_with_seizures = seizures_with["file_name"].values
+    # 6. For each seizure_times and edf_files_with_seizures, take 5 minutes (256*60*5) before the seizure
+    # from the edf data
+    seizure_samples = []
+    for edf_file, seizure_time in zip(edf_files_with_seizures, seizure_times):
+        edf_data = get_edf_data(patient, edf_file)
+        first_seizure_time = seizure_time[0][0]
+        first_seizure_time *= 256
+        seizure_samples.append(
+            edf_data[first_seizure_time - 256 * 60 * 5 : first_seizure_time]
+        )
+    # 7. Split data into 5 second windows
+    seizure_windows = []
+    for seizure_sample in seizure_samples:
+        num_samples = seizure_sample.shape[0]
+        samples_per_window = 256 * 5
+        seizure_windows.append(
+            np.array_split(seizure_sample, num_samples // samples_per_window)
+        )
+    # 8. No seizure samples
+    # Get the edf_files_names without seizures
+    edf_files_without_seizures = seizures_without["file_name"].values
+    # 9. Randomly 7 edf files without seizures
+    random.seed(42)
+    edf_files_without_seizures = random.sample(
+        list(edf_files_without_seizures), len(seizure_samples)
+    )
+    # 10. For each edf_files_without_seizures, take 5 minutes (256*60*5) before the seizure
+    # from the edf data
+    no_seizure_samples = []
+    for edf_file in edf_files_without_seizures:
+        edf_data = get_edf_data(patient, edf_file)
+        middle_time = edf_data.shape[0] // 2
+        no_seizure_samples.append(edf_data[middle_time - 256 * 60 * 5 : middle_time])
+    # 11. Split data into 5 second windows
+    no_seizure_windows = []
+    for no_seizure_sample in no_seizure_samples:
+        num_samples = no_seizure_sample.shape[0]
+        samples_per_window = 256 * 5
+        no_seizure_windows.append(
+            np.array_split(no_seizure_sample, num_samples // samples_per_window)
+        )
+    # 12. From (n, a, (b, c)) to (n*a, b, c)
+    seizure_windows = np.array(seizure_windows)
+    seizure_windows = np.concatenate(seizure_windows, axis=0)
+    # 13. Same for no_seizure_windows
+    no_seizure_windows = np.array(no_seizure_windows)
+    no_seizure_windows = np.concatenate(no_seizure_windows, axis=0)
+    return seizure_windows, no_seizure_windows
