@@ -174,14 +174,18 @@ def get_seizure_data(patient: str) -> pd.DataFrame:
     return df
 
 
-def get_patient_windows(patient: str) -> Tuple[np.ndarray, np.ndarray]:
-    """Get preictal and not preictal samples.
+def make_patient_windows(patient: str) -> Tuple[np.ndarray, np.ndarray]:
+    """Make preictal and not preictal samples.
 
     :param patient: patient id name (eg. chb01)
     :type patient: str
     :return: preictal and not preictal samples
     :rtype: Tuple[np.ndarray, np.ndarray]
     """
+    features = ['FP1-F7', 'F7-T7', 'T7-P7', 'P7-O1', 'FP1-F3', 'F3-C3', 'C3-P3', 'P3-O1', 
+            'FP2-F4', 'F4-C4', 'C4-P4', 'P4-O2', 'FP2-F8', 'F8-T8', 'T8-P8-0', 'P8-O2', 
+            'FZ-CZ', 'CZ-PZ', 'P7-T7', 'T7-FT9', 'FT9-FT10', 'FT10-T8']
+
     # 1. Get edf files for patient
     edf_files = get_patient_edf(patient)
     # 2. Get info about seizures
@@ -206,6 +210,7 @@ def get_patient_windows(patient: str) -> Tuple[np.ndarray, np.ndarray]:
     seizure_samples = []
     for edf_file, seizure_time in zip(edf_files_with_seizures, seizure_times):
         edf_data = get_edf_data(patient, edf_file)
+        edf_data = edf_data[features]
         first_seizure_time = seizure_time[0][0]
         first_seizure_time *= 256
         seizure_samples.append(
@@ -232,6 +237,7 @@ def get_patient_windows(patient: str) -> Tuple[np.ndarray, np.ndarray]:
     no_seizure_samples = []
     for edf_file in edf_files_without_seizures:
         edf_data = get_edf_data(patient, edf_file)
+        edf_data = edf_data[features]
         middle_time = edf_data.shape[0] // 2
         no_seizure_samples.append(edf_data[middle_time - 256 * 60 * 5 : middle_time])
     # 11. Split data into 5 second windows
