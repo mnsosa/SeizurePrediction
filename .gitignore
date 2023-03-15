@@ -11,3 +11,5 @@ src/sz_utils.egg-info/PKG-INFO
 src/sz_utils.egg-info/top_level.txt
 src/__pycache__/
 src/sz_utils/__pycache__/
+src/notebooks/Accuracy.png
+src/notebooks/mlruns/
