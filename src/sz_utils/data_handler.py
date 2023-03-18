@@ -174,6 +174,33 @@ def get_seizure_data(patient: str) -> pd.DataFrame:
     return df
 
 
+def get_features() -> List[str]:
+    return [
+        "FP1-F7",
+        "F7-T7",
+        "T7-P7",
+        "P7-O1",
+        "FP1-F3",
+        "F3-C3",
+        "C3-P3",
+        "P3-O1",
+        "FP2-F4",
+        "F4-C4",
+        "C4-P4",
+        "P4-O2",
+        "FP2-F8",
+        "F8-T8",
+        "T8-P8-0",
+        "P8-O2",
+        "FZ-CZ",
+        "CZ-PZ",
+        "P7-T7",
+        "T7-FT9",
+        "FT9-FT10",
+        "FT10-T8",
+    ]
+
+
 def make_patient_windows(patient: str) -> Tuple[np.ndarray, np.ndarray]:
     """Make preictal and not preictal samples.
 
@@ -182,9 +209,7 @@ def make_patient_windows(patient: str) -> Tuple[np.ndarray, np.ndarray]:
     :return: preictal and not preictal samples
     :rtype: Tuple[np.ndarray, np.ndarray]
     """
-    features = ['FP1-F7', 'F7-T7', 'T7-P7', 'P7-O1', 'FP1-F3', 'F3-C3', 'C3-P3', 'P3-O1', 
-            'FP2-F4', 'F4-C4', 'C4-P4', 'P4-O2', 'FP2-F8', 'F8-T8', 'T8-P8-0', 'P8-O2', 
-            'FZ-CZ', 'CZ-PZ', 'P7-T7', 'T7-FT9', 'FT9-FT10', 'FT10-T8']
+    features = get_features()
 
     # 1. Get edf files for patient
     # edf_files = get_patient_edf(patient)
@@ -213,6 +238,8 @@ def make_patient_windows(patient: str) -> Tuple[np.ndarray, np.ndarray]:
         edf_data = edf_data[features]
         first_seizure_time = seizure_time[0][0]
         first_seizure_time *= 256
+        if first_seizure_time < 256 * 60 * 5:
+            continue # skip seizures that are too close to the start of the file
         seizure_samples.append(
             edf_data[first_seizure_time - 256 * 60 * 5 : first_seizure_time]
         )
