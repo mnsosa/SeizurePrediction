@@ -13,3 +13,5 @@ src/__pycache__/
 src/sz_utils/__pycache__/
 src/notebooks/Accuracy.png
 src/notebooks/mlruns/
+mlruns/0/meta.yaml
+src/notebooks/graphs.png
