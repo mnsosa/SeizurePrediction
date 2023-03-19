@@ -256,9 +256,13 @@ def make_patient_windows(patient: str) -> Tuple[np.ndarray, np.ndarray]:
     edf_files_without_seizures = seizures_without["file_name"].values
     # 9. Randomly 7 edf files without seizures
     random.seed(42)
-    edf_files_without_seizures = random.sample(
-        list(edf_files_without_seizures), len(seizure_samples)
-    )
+    try:
+        edf_files_without_seizures = random.sample(
+            list(edf_files_without_seizures), len(seizure_samples)
+        )
+    except ValueError:
+        # if there are more seizures than no seizures, just use all the no seizure files
+        pass
     # 10. For each edf_files_without_seizures, take 5 minutes (256*60*5) before the seizure
     # from the edf data
     no_seizure_samples = []
@@ -280,5 +284,9 @@ def make_patient_windows(patient: str) -> Tuple[np.ndarray, np.ndarray]:
     seizure_windows = np.concatenate(seizure_windows, axis=0)
     # 13. Same for no_seizure_windows
     no_seizure_windows = np.array(no_seizure_windows)
-    no_seizure_windows = np.concatenate(no_seizure_windows, axis=0)
+    try:
+        no_seizure_windows = np.concatenate(no_seizure_windows, axis=0)
+    except ValueError:
+        # if there are no no seizure samples, return an empty array
+        return seizure_windows, no_seizure_windows 
     return seizure_windows, no_seizure_windows
