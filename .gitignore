@@ -15,4 +15,5 @@ src/notebooks/Accuracy.png
 src/notebooks/mlruns/
 mlruns/0/meta.yaml
 src/notebooks/graphs.png
-src/data
+key_ccad
+key_ccad.pub
