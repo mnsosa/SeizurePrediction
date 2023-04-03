@@ -18,3 +18,5 @@ mlruns/0/meta.yaml
 src/notebooks/graphs.png
 key_ccad
 key_ccad.pub
+src/notebooks/mlruns/
+src/notebooks/mlartifacts/
