@@ -9,6 +9,7 @@ src/sz_utils.egg-info/dependency_links.txt
 src/sz_utils.egg-info/SOURCES.txt
 src/sz_utils.egg-info/PKG-INFO
 src/sz_utils.egg-info/top_level.txt
+src/data
 src/__pycache__/
 src/sz_utils/__pycache__/
 src/notebooks/Accuracy.png
@@ -17,4 +18,6 @@ mlruns/0/meta.yaml
 src/notebooks/graphs.png
 key_ccad
 key_ccad.pub
+src/notebooks/mlruns/
+src/notebooks/mlartifacts/
 src/data/
